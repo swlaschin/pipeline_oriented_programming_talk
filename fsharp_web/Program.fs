@@ -5,29 +5,49 @@ open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
+open CustomerDb
 
 // For more on Giraffe see
 // https://github.com/giraffe-fsharp/Giraffe/
 
 let base_dir = __SOURCE_DIRECTORY__
 
-let goodbyeHandler name :HttpHandler =
-    fun next ctx ->
-        ($"Goodbye {name}" |> text) next ctx
 
-let myRecord = {| Name = "Scott"; Email="scott@example.com "|}
+// Return some parameterized text
+let goodbyeWithName name :HttpHandler =
+    text ($"Goodbye {name}")
 
-let accessDenied = setStatusCode 401 >=> text "Access Denied"
+// Return some JSON
+let jsonExample() =
+    let myRecord = {| Name = "Scott"; Email="scott@example.com "|}
+    json myRecord
+
+// Database query with error handling 
+let customerHandler customerId :HttpHandler = 
+    printfn "loading customer %i" customerId
+    let customerOrError = CustomerDb.loadCustomerFromDb customerId
+    match customerOrError with
+    | Ok customer -> 
+        json customer
+    | Error errorMsg -> 
+        setStatusCode 400 >=> text errorMsg 
+
+// return a non-200
+let accessDenied = 
+    setStatusCode 401 >=> text "Access Denied"
 
 let webApp =
     choose [
         GET >=> route "/ping"   >=> text "pong"
         GET >=> route "/hello"   >=> text "GET hello"
+        POST >=> route "/hello"   >=> text "POST hello"
         GET >=> route "/goodbye"   >=>  text "GET goodbye"
-        GET >=> routef "/goodbye/%s" goodbyeHandler
-        POST >=> route "/hello"   >=> json myRecord
-        POST >=> route "/goodbye" >=> accessDenied 
-        route "/" >=> htmlFile (base_dir + "/pages/index.html") ]
+        GET >=> routef "/goodbye/%s" goodbyeWithName
+        POST >=> route "/jsonExample" >=> jsonExample()
+        GET >=> routef "/customer/%i" customerHandler
+        POST >=> route "/denied" >=> accessDenied 
+        // home page
+        GET >=> route "/" >=> htmlFile (base_dir + "/pages/index.html") ]
 
 
 

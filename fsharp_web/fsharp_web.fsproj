@@ -6,10 +6,9 @@
 
   <ItemGroup>
     <Content Include="pages\index.html" />
+    <Compile Include="CustomerDb.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
-
-  <ItemGroup />
 
   <ItemGroup>
     <PackageReference Include="Giraffe" Version="5.0.0" />
