@@ -25,7 +25,7 @@ FizzBuzzExample1.fizzBuzz()
 // =============================================
 
 type FizzBuzzData = 
-    {Output:string; Number:int }
+    { Output:string; Number:int }
 
 module FizzBuzzExample2 =
 
@@ -88,17 +88,23 @@ module FizzBuzzExample3 =
 
     let fizzBuzzPipeline i =
         {Output=""; Number=i}
+        |> logger "before"
         |> handle 15 "FizzBuzz"
         |> handle 3 "Fizz"
         |> handle 5 "Buzz"
+        |> handle 7 "Zap"
+        |> logger "after"
         |> finalStep
        
 
     let fizzBuzz() =
-        [1..30]
+        [1..35]
         |> List.map fizzBuzzPipeline
         |> String.concat ","
         |> printfn "%s"
+
+
+    fizzBuzz()
 
 FizzBuzzExample3.fizzBuzz()
     
@@ -130,9 +136,11 @@ module FizzBuzzExample4 =
         |> finalStep
 
     let fizzBuzz() =
-        [1..30]
+        [1..35]
         |> List.map fizzBuzzPipeline
         |> String.concat ","
         |> printfn "%s"
+
+    fizzBuzz()
 
 FizzBuzzExample4.fizzBuzz()
