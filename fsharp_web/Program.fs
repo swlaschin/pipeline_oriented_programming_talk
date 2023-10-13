@@ -20,7 +20,7 @@ let goodbyeWithName name :HttpHandler =
 // Return some JSON
 let jsonExample() =
     let myRecord = {| Name = "Scott"; Email="scott@example.com "|}
-    json myRecord
+    json myRecord  // serialize to json
 
 // Database query with error handling 
 let customerHandler customerId :HttpHandler = 
@@ -28,7 +28,7 @@ let customerHandler customerId :HttpHandler =
     let customerOrError = CustomerDb.loadCustomerFromDb customerId
     match customerOrError with
     | Ok customer -> 
-        json customer
+        json customer // OK, return serialized version
     | Error errorMsg -> 
         setStatusCode 400 >=> text errorMsg 
 
@@ -36,13 +36,19 @@ let customerHandler customerId :HttpHandler =
 let accessDenied = 
     setStatusCode 401 >=> text "Access Denied"
 
+let pingPongHandler =
+    choose [
+        route "/ping" >=> text "pong"
+        route "/pong" >=> text "ping"
+        ]
+
 let webApp =
     choose [
-        GET >=> route "/ping"   >=> text "pong"
         GET >=> route "/hello"   >=> text "GET hello"
         POST >=> route "/hello"   >=> text "POST hello"
-        GET >=> route "/goodbye"   >=>  text "GET goodbye"
+        GET >=> route "/goodbye"   >=>  text "GET goodbye (no name)"
         GET >=> routef "/goodbye/%s" goodbyeWithName
+        GET >=> pingPongHandler 
         POST >=> route "/jsonExample" >=> jsonExample()
         GET >=> routef "/customer/%i" customerHandler
         POST >=> route "/denied" >=> accessDenied 

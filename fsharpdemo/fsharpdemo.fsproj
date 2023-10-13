@@ -12,8 +12,9 @@
 
   <ItemGroup>
     <None Include="CollectionExample.fsx" />
-    <None Include="FizzBuzzExample.fsx" />
     <None Include="RomanNumeralsExample.fsx" />
+    <None Include="FizzBuzzExample_Classic.fsx" />
+    <None Include="FizzBuzzExample_Pipeline.fsx" />
   </ItemGroup>
 
 </Project>
