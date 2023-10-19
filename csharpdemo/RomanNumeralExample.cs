@@ -2,6 +2,15 @@
 
 namespace csharpdemo
 {
+    public static class MyExtensions
+    {
+        public static string Log(this string str, string message)
+        {
+            Console.WriteLine($"[{message}] {str}");
+            return str;
+        }
+    }
+
     public class RomanNumeralExample
     {
         /// <summary>
@@ -32,5 +41,27 @@ namespace csharpdemo
                 .Replace("LXXXX", "XC")
                 .Replace("XXXX", "XL");
         }
+
+        /// <summary>
+        /// Roman numeral with logging
+        /// </summary>
+        static public string ToRomanNumerals3(int n)
+        {
+            return new String('I', n)
+                .Log("before")
+                .Replace("IIIII", "V")
+                .Replace("VV", "X")
+                .Replace("XXXXX", "L")
+                .Replace("LL", "C")
+                .Log("before special cases")
+                // with special cases
+                .Replace("VIIII", "IX")
+                .Replace("IIII", "IV")
+                .Replace("LXXXX", "XC")
+                .Replace("XXXX", "XL")
+                .Log("end");
+
+        }
+
     }
 }

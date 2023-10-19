@@ -14,13 +14,26 @@ let base_dir = __SOURCE_DIRECTORY__
 
 
 // Return some parameterized text
-let goodbyeWithName name :HttpHandler =
-    text ($"Goodbye {name}")
+let helloWithName name :HttpHandler =
+    text ($"Hello {name}")
+
+let sayGoodbye =
+    text "Don't say goodbye to NDC :("
+    
+// Choose between ping and pong depending on the input
+let pingPongHandler =
+    choose [
+        route "/ping" >=> text "pong"
+        route "/pong" >=> text "ping"
+        ]
+
+
 
 // Return some JSON
 let jsonExample() =
     let myRecord = {| Name = "Scott"; Email="scott@example.com "|}
     json myRecord  // serialize to json
+
 
 // Database query with error handling 
 let customerHandler customerId :HttpHandler = 
@@ -34,20 +47,16 @@ let customerHandler customerId :HttpHandler =
 
 // return a non-200
 let accessDenied = 
-    setStatusCode 401 >=> text "Access Denied"
+    setStatusCode 401 
+    >=> text "Access Denied"
 
-let pingPongHandler =
-    choose [
-        route "/ping" >=> text "pong"
-        route "/pong" >=> text "ping"
-        ]
 
 let webApp =
     choose [
-        GET >=> route "/hello"   >=> text "GET hello"
-        POST >=> route "/hello"   >=> text "POST hello"
-        GET >=> route "/goodbye"   >=>  text "GET goodbye (no name)"
-        GET >=> routef "/goodbye/%s" goodbyeWithName
+        GET >=> route "/hello"     >=> text "GET hello"
+        POST >=> route "/hello"    >=> text "POST hello"
+        GET >=> routef "/hello/%s" helloWithName
+        GET >=> route "/goodbye"   >=> sayGoodbye
         GET >=> pingPongHandler 
         POST >=> route "/jsonExample" >=> jsonExample()
         GET >=> routef "/customer/%i" customerHandler

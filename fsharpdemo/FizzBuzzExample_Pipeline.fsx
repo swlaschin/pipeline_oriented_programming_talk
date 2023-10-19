@@ -12,6 +12,7 @@ let handle divisor output data =
     elif data.Number % divisor <> 0 then
         data // not applicable
     else
+        // set the output string to non-empty
         {Output=output; Number=data.Number}
 
 
@@ -19,12 +20,12 @@ let finalStep data =
     if data.Output <> "" then
         data.Output // already processed
     else
-        data.Number.ToString()
+        string data.Number // convert to string
 
 
 // something else to put in the pipeline
-let logger message data =
-    printfn "%s: %A" message data
+let log message data =
+    printfn $"[{message}]: {data}" 
     data
 
 let fizzBuzzPipeline i =
@@ -41,9 +42,11 @@ let fizzBuzz() =
     |> String.concat ","
     |> printfn "%s"
 
-
 fizzBuzz()
 
+// TO DEMO
+// add logging
+// add handler for 7
 
 // =============================================
 // Demonstrates a parallel fizzbuzz
@@ -57,14 +60,13 @@ let fizzBuzzParallelHandler i =
     let initialData = {Output=""; Number=i}
 
     let handlers = [
-        handle 3 "Fizz"
-        handle 5 "Buzz"
-        handle 7 "Zap"
+        handle 3 "Fizz" 
+        handle 5 "Buzz" 
     ]
 
     handlers
     |> List.map (fun handler -> handler initialData)
-    |> List.reduce combineData
+    |> List.reduce combineData   // Map/Reduce!
     |> finalStep
 
 let fizzBuzzParallel() =
@@ -75,3 +77,6 @@ let fizzBuzzParallel() =
 
 fizzBuzzParallel()
 
+// TO DEMO
+// add logging
+// add handler for 7

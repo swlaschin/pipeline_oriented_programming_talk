@@ -6,9 +6,8 @@ namespace csharpdemo
     {
         static void Main()
         {
-            FizzBuzzExample1.FizzBuzz();
-            FizzBuzzExample2.FizzBuzz();
-            FizzBuzzExample3.FizzBuzz();
+            FizzBuzzClassicExample.FizzBuzz();
+            FizzBuzzPipelineExample.FizzBuzz();
 
             var i = CalculationExample.NestedCalls();
             Console.WriteLine($"NestedCalls {i}");
